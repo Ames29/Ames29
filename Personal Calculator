@@ -1,0 +1,55 @@
+import tkinter as tk
+import PySimpleGui as sg
+
+class Calculator:
+    def __init__(self, master):
+        self.master = master
+        master.title("Calculator")
+
+        # Create an Entry widget for input and display
+        self.entry = tk.Entry(master, font=("Arial", 18), justify="right")
+        self.entry.grid(row=0, column=0, columnspan=4)
+
+        # Create buttons for digits 0 to 9
+        for i in range(10):
+            digit_button = tk.Button(master, text=str(i), command=lambda i=i: self.click_digit(i))
+            digit_button.grid(row=(9 - i) // 3 + 1, column=(i - 1) % 3)
+
+        # Create buttons for arithmetic operations
+        operations = ['+', '-', '*', '/']
+        for i, op in enumerate(operations):
+            op_button = tk.Button(master, text=op, command=lambda op=op: self.click_operation(op))
+            op_button.grid(row=i + 1, column=3)
+
+        # Create "=" and "C" buttons
+        equal_button = tk.Button(master, text="=", command=self.calculate_result)
+        equal_button.grid(row=4, column=2)
+        clear_button = tk.Button(master, text="C", command=self.clear_input)
+        clear_button.grid(row=4, column=1)
+
+    def click_digit(self, digit):
+        current_text = self.entry.get()
+        self.entry.delete(0, tk.END)
+        self.entry.insert(0, current_text + str(digit))
+
+    def click_operation(self, operation):
+        current_text = self.entry.get()
+        self.entry.delete(0, tk.END)
+        self.entry.insert(0, current_text + operation)
+
+    def calculate_result(self):
+        try:
+            result = eval(self.entry.get())
+            self.entry.delete(0, tk.END)
+            self.entry.insert(0, str(result))
+        except Exception:
+            self.entry.delete(0, tk.END)
+            self.entry.insert(0, "Error")
+
+    def clear_input(self):
+        self.entry.delete(0, tk.END)
+
+if __name__ == '__main__':
+    root = tk.Tk()
+    my_calculator = Calculator(root)
+    root.mainloop()
